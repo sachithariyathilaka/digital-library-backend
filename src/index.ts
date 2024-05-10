@@ -1,16 +1,16 @@
 import {APIGatewayProxyEventV2, APIGatewayProxyStructuredResultV2} from "aws-lambda";
-import {RequestBody} from "./interface/RequestBody";
-import {ResponseBody} from "./interface/ResponseBody";
+import {Request} from "./interface/Request";
+import {Response} from "./interface/Response";
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyStructuredResultV2> => {
 
     try {
-        const requestBody = event.queryStringParameters as unknown as RequestBody;
-        let responseBody: ResponseBody = { message: "Hello " + requestBody.name };
+        const request = event.queryStringParameters as unknown as Request;
+        let response: Response = { message: "Hello " + request.name };
 
-        return {statusCode: 200, body: JSON.stringify(responseBody)};
+        return {statusCode: 200, body: JSON.stringify(response)};
     } catch (err)
     {
-        console.log(err);
+        return {statusCode: 500, body: JSON.stringify("Internal Server Error!")}
     }
 }
