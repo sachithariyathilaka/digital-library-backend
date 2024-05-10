@@ -1,3 +1,7 @@
 export interface Request {
-    name: string;
+    title: string
+    // description: string
+    // year: number
+    // author: string
+    // origin: string
 }

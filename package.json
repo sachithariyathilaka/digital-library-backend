@@ -4,8 +4,8 @@
   "description": "Sample node js project for aws lambda",
   "main": "index.js",
   "scripts": {
-    "deploy": "lambda-build upload Node -e src/index.ts -r eu-north-1",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "lambda-build upload library-project -e index.ts -r eu-north-1",
+    "test": "node -r esbuild-register index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "g": "^2.0.1",
-    "lambda-build": "^1.0.6"
+    "lambda-build": "^1.0.6",
+    "mongodb": "^6.6.1"
   }
 }
