@@ -1,16 +1,14 @@
 import {APIGatewayProxyEventV2, APIGatewayProxyStructuredResultV2} from "aws-lambda";
-import {Request} from "./src/interface/Request";
-import {Response} from "./src/interface/Response";
-import {DatabaseResponse} from "./src/interface/DatabaseResponse";
-
-let dbConnect = require('./src/database/database')
+import {RequestBody} from "./src/interface/RequestBody";
+import {ResponseBody} from "./src/interface/ResponseBody";
+import {insertData} from "./src/crud/insert";
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyStructuredResultV2> => {
 
     try {
-        const requestBody = event.body as unknown as Request
+        const requestBody = JSON.parse(event.body) as unknown as RequestBody
         let response = await insertData(requestBody)
-        let responseBody: Response;
+        let responseBody: ResponseBody;
 
         if (response.acknowledged) {
             responseBody = {
@@ -35,14 +33,8 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
                 body: JSON.stringify(responseBody)
             }
         }
-
     } catch (err)
     {
-        return {statusCode: 500, body: JSON.stringify("Internal Server Error!")}
+        return {statusCode: 500, body: JSON.stringify("Internal Server Error! " + err)}
     }
-}
-
-export const insertData = async (request: Request)=> {
-    let database = await dbConnect();
-    return await database.insertOne(request) as DatabaseResponse;
 }
