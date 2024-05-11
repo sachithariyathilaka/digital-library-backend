@@ -1,4 +1,4 @@
-export interface DbResponse {
+export interface InsertResponse {
     acknowledged: boolean
     insertedId: any
 }

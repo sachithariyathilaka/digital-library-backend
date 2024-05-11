@@ -2,6 +2,7 @@ import {APIGatewayProxyEventV2, APIGatewayProxyStructuredResultV2} from "aws-lam
 import {Request} from "./src/interface/Request";
 import {insertData} from "./src/crud/insert";
 import {loadData} from "./src/crud/load";
+import {deleteData} from "./src/crud/delete";
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyStructuredResultV2> => {
 
@@ -14,6 +15,10 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
 
             case "GET":
                 return loadData()
+
+            case "DELETE":
+                const queryParams = event.queryStringParameters as any
+                return deleteData(queryParams.id)
 
             default:
                 let apiResponse = {

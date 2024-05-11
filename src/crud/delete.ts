@@ -1,20 +1,20 @@
-import {Request} from "../interface/Request";
 import {dbConnect} from "../database";
-import {InsertResponse} from "../interface/InsertResponse";
 import {APIResponse} from "../interface/APIResponse";
+import {ObjectId} from "mongodb";
+import {DeleteResponse} from "../interface/DeleteResponse";
 
-export const insertData = async (request: Request)=> {
+export const deleteData = async (id: string)=> {
     let apiResponse: APIResponse;
 
     try {
         let database = await dbConnect();
-        let insertResponse = await database.insertOne(request) as InsertResponse
+        let deleteResponse = await database.deleteOne({ "_id" : new ObjectId(id)}) as DeleteResponse
 
-        if (insertResponse.acknowledged) {
+        if (deleteResponse.acknowledged && deleteResponse.deletedCount == 1) {
             apiResponse = {
                 code: 200,
-                message: "Book added successfully!",
-                data: insertResponse.insertedId
+                message: "Book deleted successfully!",
+                data: deleteResponse.deletedCount
             }
 
             return {
@@ -24,7 +24,7 @@ export const insertData = async (request: Request)=> {
         } else {
             apiResponse = {
                 code: 500,
-                message: "Error occurred while saving the book!",
+                message: "Error occurred while deleting the book!",
                 data: null
             }
 
