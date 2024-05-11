@@ -1,4 +1,4 @@
-export interface Request {
+export interface BookRequest {
     title: string
     description: string
     year: number

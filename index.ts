@@ -1,5 +1,5 @@
 import {APIGatewayProxyEventV2, APIGatewayProxyStructuredResultV2} from "aws-lambda";
-import {Request} from "./src/interface/Request";
+import {BookRequest} from "./src/resource/request/BookRequest";
 import {insertData} from "./src/crud/Insert";
 import {loadData} from "./src/crud/Load";
 import {deleteData} from "./src/crud/Delete";
@@ -11,7 +11,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
         switch (event.requestContext.http.method)
         {
             case "POST":
-                const insertRequest = JSON.parse(event.body) as unknown as Request
+                const insertRequest = JSON.parse(event.body) as unknown as BookRequest
                 return insertData(insertRequest)
 
             case "GET":
@@ -19,7 +19,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
 
             case "PUT":
                 const updateParams = event.queryStringParameters as any
-                const updateRequest = JSON.parse(event.body) as unknown as Request
+                const updateRequest = JSON.parse(event.body) as unknown as BookRequest
                 return updateData(updateParams.id, updateRequest)
 
             case "DELETE":

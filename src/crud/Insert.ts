@@ -1,14 +1,25 @@
-import {Request} from "../interface/Request";
+import {BookRequest} from "../resource/request/BookRequest";
 import {dbConnect} from "../database";
-import {InsertResponse} from "../interface/InsertResponse";
-import {APIResponse} from "../interface/APIResponse";
+import {InsertResponse} from "../resource/response/InsertResponse";
+import {APIResponse} from "../resource/response/APIResponse";
+import {Book} from "../model/Book";
 
-export const insertData = async (request: Request)=> {
+export const insertData = async (bookRequest: BookRequest)=> {
     let apiResponse: APIResponse;
 
     try {
         let database = await dbConnect();
-        let insertResponse = await database.insertOne(request) as InsertResponse
+        let book: Book = {
+            title: bookRequest.title,
+            description: bookRequest.description,
+            year: bookRequest.year,
+            origin: bookRequest.origin,
+            author: bookRequest.author,
+            createDate: new Date().getTime(),
+            lastModifiedDate: new Date().getTime()
+        }
+
+        let insertResponse = await database.insertOne(book) as InsertResponse
 
         if (insertResponse.acknowledged) {
             apiResponse = {

@@ -1,7 +1,7 @@
 import {dbConnect} from "../database";
-import {APIResponse} from "../interface/APIResponse";
+import {APIResponse} from "../resource/response/APIResponse";
 import {ObjectId} from "mongodb";
-import {DeleteResponse} from "../interface/DeleteResponse";
+import {DeleteResponse} from "../resource/response/DeleteResponse";
 
 export const deleteData = async (id: string)=> {
     let apiResponse: APIResponse;

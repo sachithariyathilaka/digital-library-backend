@@ -1,26 +1,27 @@
-import {Request} from "../interface/Request";
+import {BookRequest} from "../resource/request/BookRequest";
 import {dbConnect} from "../database";
-import {APIResponse} from "../interface/APIResponse";
+import {APIResponse} from "../resource/response/APIResponse";
 import {ObjectId} from "mongodb";
-import {UpdateResponse} from "../interface/UpdateResponse";
+import {UpdateResponse} from "../resource/response/UpdateResponse";
 
-export const updateData = async (id: string, request: Request)=> {
+export const updateData = async (id: string, bookRequest: BookRequest)=> {
     let apiResponse: APIResponse;
 
     try {
         let database = await dbConnect();
         const filter = {  "_id" : new ObjectId(id)}
-        const updateRequest = {
+        const book = {
             $set: {
-                title: request.title,
-                description: request.description,
-                year: request.year,
-                origin: request.origin,
-                author: request.author
+                title: bookRequest.title,
+                description: bookRequest.description,
+                year: bookRequest.year,
+                origin: bookRequest.origin,
+                author: bookRequest.author,
+                lastModifiedDate: new Date().getTime()
             },
         }
 
-        let updateResponse = await database.updateOne(filter, updateRequest) as UpdateResponse
+        let updateResponse = await database.updateOne(filter, book) as UpdateResponse
 
         if (updateResponse.acknowledged && updateResponse.matchedCount == 1 && updateResponse.modifiedCount == 1) {
             apiResponse = {

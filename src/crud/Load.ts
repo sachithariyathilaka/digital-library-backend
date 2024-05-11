@@ -1,5 +1,5 @@
 import {dbConnect} from "../database";
-import {APIResponse} from "../interface/APIResponse";
+import {APIResponse} from "../resource/response/APIResponse";
 
 export const loadData = async ()=> {
     let apiResponse: APIResponse;
