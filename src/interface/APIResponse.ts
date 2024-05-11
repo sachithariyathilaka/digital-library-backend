@@ -1,4 +1,4 @@
-export interface ResponseBody {
+export interface APIResponse {
     code: number;
     message: string;
     data: any;
