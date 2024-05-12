@@ -1,4 +1,4 @@
-# Node lambda Tutorial
+# Digital Library Backend
 Node.js tutorial project from execute CRUD operations hosted in AWS Lambda.
 
 * ### Technologies
@@ -14,7 +14,7 @@ Node.js tutorial project from execute CRUD operations hosted in AWS Lambda.
 
   * Release: 1.0.0
   * Date: 2024/05/11
-  * Module: Node lambda Tutorial
+  * Module: Digital Library Backend
   * Changes
     * Implement the insert books data function.
     * Implement the load books data function.

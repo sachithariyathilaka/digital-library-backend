@@ -1,8 +1,8 @@
 {
-  "name": "node-backend",
+  "name": "digital-library-backend",
   "version": "1.0.0",
   "description": "Sample node js project for aws lambda",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "deploy": "lambda-build upload library-project -e index.ts -r eu-north-1",
     "test": "node -r esbuild-register index.ts"
