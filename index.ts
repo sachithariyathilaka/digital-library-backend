@@ -1,5 +1,5 @@
 import {APIGatewayProxyEventV2} from "aws-lambda";
-import {BookRequest} from "./src/resource/request/BookRequest";
+import {BookRequest} from "./src/resource/request/book-request";
 import {BookService} from "./src/service/book-service";
 import {DatabaseService} from "./src/service/database-service";
 import {HttpMethod} from "./src/enums/http-method";

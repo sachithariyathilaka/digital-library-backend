@@ -1,4 +1,4 @@
-import {BookRequest} from "../resource/request/BookRequest";
+import {BookRequest} from "../resource/request/book-request";
 
 export class Book {
     title: string
