@@ -5,6 +5,7 @@ import {DatabaseService} from "./src/service/database-service";
 import {HttpMethod} from "./src/enums/http-method";
 import {ResponseHandler} from "./src/resource/response/response-handler";
 import {APIResponse} from "./src/resource/response/api-response";
+import {headers} from "./src/resource/constant";
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<ResponseHandler> => {
     try {
@@ -29,12 +30,12 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<ResponseHa
 
             default:
                 let apiResponse = new APIResponse(405, "Method Not Allowed!", null)
-                return new ResponseHandler(405, apiResponse)
+                return new ResponseHandler(405, headers, apiResponse)
         }
     } catch (err)
     {
         let apiResponse = new APIResponse(500, "Internal Server Error! " + err, null)
-        return new ResponseHandler(500, apiResponse)
+        return new ResponseHandler(500, headers, apiResponse)
     }
 }
 

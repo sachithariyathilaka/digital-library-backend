@@ -5,6 +5,7 @@ import {Book} from "../model/book";
 import {ObjectId} from "mongodb";
 import {ResponseHandler} from "../resource/response/response-handler";
 import {Status} from "../enums/status";
+import {headers} from "../resource/constant";
 
 export class BookService {
 
@@ -21,15 +22,15 @@ export class BookService {
 
             if (result.acknowledged) {
                 apiResponse = new APIResponse(200, "Book added successfully!", result.insertedId)
-                return new ResponseHandler(200, apiResponse)
+                return new ResponseHandler(200, headers, apiResponse)
             } else {
                 apiResponse = new APIResponse(500, "Error occurred while saving the book!", null)
-                return new ResponseHandler(500, apiResponse)
+                return new ResponseHandler(500, headers, apiResponse)
             }
         } catch (err)
         {
             apiResponse = new APIResponse( 500, "Internal Server Error! " + err, null)
-            return new ResponseHandler(500, apiResponse)
+            return new ResponseHandler(500, headers, apiResponse)
         }
     }
 
@@ -42,15 +43,15 @@ export class BookService {
 
             if (books.length > 0) {
                 apiResponse = new APIResponse(200, "Books fetched successfully!", books)
-                return new ResponseHandler(200, apiResponse)
+                return new ResponseHandler(200, headers, apiResponse)
             } else {
                 apiResponse = new APIResponse(204, "No books available!", [])
-                return new ResponseHandler(204, apiResponse)
+                return new ResponseHandler(204, headers, apiResponse)
             }
         } catch (err)
         {
             apiResponse = new APIResponse(500, "Internal Server Error! " + err, null)
-            return new ResponseHandler(500, apiResponse)
+            return new ResponseHandler(500, headers, apiResponse)
         }
     }
 
@@ -65,7 +66,7 @@ export class BookService {
             if (status != Status.NO_ERRORS)
             {
                 apiResponse = new APIResponse(422, status, id)
-                return new ResponseHandler(422, apiResponse)
+                return new ResponseHandler(422, headers, apiResponse)
             } else {
                 const filter = {  "_id" : new ObjectId(id)}
                 const request = {$set: new Book(bookRequest)}
@@ -73,16 +74,16 @@ export class BookService {
 
                 if (result.acknowledged && result.matchedCount == 1 && result.modifiedCount == 1) {
                     apiResponse = new APIResponse(200, "Book updated successfully!", id)
-                    return new ResponseHandler(200, apiResponse)
+                    return new ResponseHandler(200, headers, apiResponse)
                 } else {
                     apiResponse = new APIResponse(500, "Error occurred while updating the book!", id)
-                    return new ResponseHandler(500, apiResponse)
+                    return new ResponseHandler(500, headers, apiResponse)
                 }
             }
         } catch (err)
         {
             apiResponse = new APIResponse(500, "Internal Server Error! " + err, id)
-            return new ResponseHandler(500, apiResponse)
+            return new ResponseHandler(500, headers, apiResponse)
         }
     }
 
@@ -109,14 +110,14 @@ export class BookService {
 
             if (result.acknowledged && result.deletedCount == 1) {
                 apiResponse = new APIResponse(200, "Book deleted successfully!", id)
-                return new ResponseHandler(200, apiResponse)
+                return new ResponseHandler(200, headers, apiResponse)
             } else {
                 apiResponse = new APIResponse(500, "Error occurred while deleting the book!", id)
-                return new ResponseHandler(500, apiResponse)
+                return new ResponseHandler(500, headers, apiResponse)
             }
         } catch (err)
         {   apiResponse = new APIResponse(500, "Internal Server Error! " + err, id)
-            return new ResponseHandler(500, apiResponse)
+            return new ResponseHandler(500, headers, apiResponse)
         }
     }
 }
