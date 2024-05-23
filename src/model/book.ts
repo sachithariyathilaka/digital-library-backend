@@ -8,7 +8,7 @@ export class Book {
     origin: string
     quantity: number
     version: number
-    createDate: number
+    createdDate: number
     lastModifiedDate: number
 
     constructor(bookRequest: BookRequest) {
@@ -24,7 +24,7 @@ export class Book {
             this.version = bookRequest.version + 1
         else {
             this.version = 1
-            this.createDate = new Date().getTime()
+            this.createdDate = new Date().getTime()
         }
     }
 }
