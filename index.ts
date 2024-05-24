@@ -27,6 +27,9 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<ResponseHa
             case HttpMethod.DELETE:
                 return bookService.deleteBook(params.id)
 
+            case HttpMethod.OPTIONS:
+                return new ResponseHandler(200, null)
+
             default:
                 let apiResponse = new APIResponse(405, "Method Not Allowed!", null)
                 return new ResponseHandler(405, apiResponse)
