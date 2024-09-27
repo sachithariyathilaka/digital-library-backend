@@ -1,23 +1,26 @@
 {
   "name": "digital-library-backend",
   "version": "1.0.0",
-  "description": "Sample node js project for aws lambda",
-  "main": "index.ts",
+  "main": "index.js",
   "scripts": {
-    "deploy": "lambda-build upload library-project -e index.ts -r eu-north-1",
-    "test": "node -r esbuild-register index.ts"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "local-run": "npx serverless offline"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@types/aws-lambda": "^8.10.137",
-    "@types/node": "^20.12.11",
-    "esbuild-register": "^3.5.0",
-    "typescript": "^5.4.5"
-  },
+  "description": "",
   "dependencies": {
-    "g": "^2.0.1",
-    "lambda-build": "^1.0.6",
-    "mongodb": "^6.6.1"
+    "express": "^4.21.0",
+    "mongoose": "^7.8.2",
+    "serverless-http": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^22.7.3",
+    "serverless-offline": "^14.3.2",
+    "typescript": "^5.6.2"
   }
 }

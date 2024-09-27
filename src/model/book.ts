@@ -1,30 +1,16 @@
-import {BookRequest} from "../resource/request/book-request";
+import mongoose, { Schema } from 'mongoose';
+import { BookRequest } from '../resource/request/book-request';
 
-export class Book {
-    title: string
-    description: string
-    year: number
-    author: string
-    origin: string
-    quantity: number
-    version: number
-    createdDate: number
-    lastModifiedDate: number
+let bookSchema = new Schema<BookRequest>({
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    year: { type: Number, required: true },
+    author: { type: String, required: true },
+    origin: { type: String, required: true },
+    quantity: { type: Number, required: true },
+    version: { type: Number, required: true},
+    createdDate: { type: Number, required: true },
+    lastModifiedDate: { type: Number, required: true }
+});
 
-    constructor(bookRequest: BookRequest) {
-        this.title = bookRequest.title;
-        this.description = bookRequest.description;
-        this.year = bookRequest.year;
-        this.author = bookRequest.author;
-        this.origin = bookRequest.origin;
-        this.quantity = bookRequest.quantity;
-        this.lastModifiedDate = new Date().getTime();
-
-        if (bookRequest.version)
-            this.version = bookRequest.version + 1
-        else {
-            this.version = 1
-            this.createdDate = new Date().getTime()
-        }
-    }
-}
+export const Book = mongoose.model<BookRequest>('Book', bookSchema);

@@ -1,122 +1,103 @@
-import {DatabaseService} from "./database-service";
-import {BookRequest} from "../resource/request/book-request";
-import {APIResponse} from "../resource/response/api-response";
+import { Request, Response } from 'express';
 import {Book} from "../model/book";
-import {ObjectId} from "mongodb";
-import {ResponseHandler} from "../resource/response/response-handler";
+import {APIResponse} from "../resource/response/api-response";
+import {getBookRequest} from "../resource/request/book-request";
 import {Status} from "../enums/status";
 
-export class BookService {
+export const insertBook = async (req: Request, res: Response): Promise<void> => {
+    let apiResponse: APIResponse;
 
-    constructor(private databaseService: DatabaseService) {
-    }
+    try {
+        let bookRequest = getBookRequest(req.body);
+        let book = await new Book(bookRequest).save();
 
-    async saveBook(bookRequest: BookRequest) {
-        let apiResponse: APIResponse;
-
-        try {
-            let database = await this.databaseService.dbConnect()
-            let book = new Book(bookRequest);
-            let result = await database.insertOne(book) as any
-
-            if (result.acknowledged) {
-                apiResponse = new APIResponse(200, "Book added successfully!", result.insertedId)
-                return new ResponseHandler(200, apiResponse)
-            } else {
-                apiResponse = new APIResponse(500, "Error occurred while saving the book!", null)
-                return new ResponseHandler(500, apiResponse)
-            }
-        } catch (err)
-        {
-            apiResponse = new APIResponse( 500, "Internal Server Error! " + err, null)
-            return new ResponseHandler(500, apiResponse)
+        if (book) {
+            apiResponse = new APIResponse(201, "Book added successfully!", book._id)
+            res.status(201).json(apiResponse);
+        } else {
+            apiResponse = new APIResponse(500, "Error occurred while saving the book!", null)
+            res.status(500).json(apiResponse);
         }
+    } catch (error) {
+        apiResponse = new APIResponse( 500, "Internal Server Error! " + error, null)
+        res.status(500).json(apiResponse);
     }
+};
 
-    async loadBooks() {
-        let apiResponse: APIResponse;
+export const  updateBook = async (req: Request, res: Response) => {
+    let apiResponse: APIResponse;
+    let bookId = req.params.id;
 
-        try {
-            let database = await this.databaseService.dbConnect()
-            let books = await database.find().toArray()
+    try {
+        let bookRequest = getBookRequest(req.body);
+        let status = await validateBook(bookId, bookRequest.version);
 
-            if (books.length > 0) {
-                apiResponse = new APIResponse(200, "Books fetched successfully!", books)
-                return new ResponseHandler(200, apiResponse)
+        if (status != Status.NO_ERRORS) {
+            apiResponse = new APIResponse(422, status, bookId);
+            res.status(422).json(apiResponse);
+        } else {
+            let updatedBook = await Book.findByIdAndUpdate(bookId, bookRequest) as any;
+
+            if (updatedBook) {
+                apiResponse = new APIResponse(200, "Book updated successfully!", bookId);
+                res.status(200).json(apiResponse);
             } else {
-                apiResponse = new APIResponse(204, "No books available!", [])
-                return new ResponseHandler(204, apiResponse)
+                apiResponse = new APIResponse(500, "Error occurred while updating the book!", bookId)
+                res.status(500).json(apiResponse);
             }
-        } catch (err)
-        {
-            apiResponse = new APIResponse(500, "Internal Server Error! " + err, null)
-            return new ResponseHandler(500, apiResponse)
         }
+    } catch (err) {
+        apiResponse = new APIResponse(500, "Internal Server Error! " + err, bookId);
+        res.status(500).json(apiResponse);
     }
+}
 
-    async updateBook(id: string, bookRequest: BookRequest) {
-        let apiResponse: APIResponse;
+let validateBook = async (id: string, version: number) => {
+    let book = await Book.findById(id) as any;
 
-        try {
-            let database = await this.databaseService.dbConnect()
-            let version = bookRequest.version
-            let status = await this.validateBook(id, version)
+    if (!book)
+        return Status.INVALID_ID
+    else if (book.version != version - 1)
+        return Status.INVALID_VERSION
+    else
+        return Status.NO_ERRORS
+}
 
-            if (status != Status.NO_ERRORS)
-            {
-                apiResponse = new APIResponse(422, status, id)
-                return new ResponseHandler(422, apiResponse)
-            } else {
-                const filter = {  "_id" : new ObjectId(id)}
-                const request = {$set: new Book(bookRequest)}
-                let result = await database.updateOne(filter, request) as any
+export const loadBooks = async (req: Request, res: Response): Promise<void> => {
+    let apiResponse: APIResponse;
 
-                if (result.acknowledged && result.matchedCount == 1 && result.modifiedCount == 1) {
-                    apiResponse = new APIResponse(200, "Book updated successfully!", id)
-                    return new ResponseHandler(200, apiResponse)
-                } else {
-                    apiResponse = new APIResponse(500, "Error occurred while updating the book!", id)
-                    return new ResponseHandler(500, apiResponse)
-                }
-            }
-        } catch (err)
-        {
-            apiResponse = new APIResponse(500, "Internal Server Error! " + err, id)
-            return new ResponseHandler(500, apiResponse)
+    try {
+        let books = await Book.find() as Array<any>;
+
+        if (books.length > 0) {
+            apiResponse = new APIResponse(200, "Books fetched successfully!", books);
+            res.status(200).json(apiResponse);
+        } else {
+            apiResponse = new APIResponse(204, "No books available!", []);
+            res.status(204).json(apiResponse);
         }
+    } catch (err) {
+        apiResponse = new APIResponse(500, "Internal Server Error! " + err, null);
+        res.status(500).json(apiResponse);
     }
+}
 
-    async validateBook(id: string, version: number) {
-        let database = await this.databaseService.dbConnect()
-        const filter = {_id: new ObjectId(id)}
-        let book = await database.findOne(filter) as any
+export const deleteBook = async (req: Request, res: Response): Promise<void> => {
+    let apiResponse: APIResponse;
+    let bookId = req.params.id;
 
-        if (!book)
-            return Status.INVALID_ID
-        else if (book.version != version)
-            return Status.INVALID_VERSION
-        else
-            return Status.NO_ERRORS
-    }
+    try {
+        let deletedBook = await Book.findByIdAndDelete(bookId);
 
-    async deleteBook(id: string) {
-        let apiResponse: APIResponse;
-
-        try {
-            let database = await this.databaseService.dbConnect()
-            const filter = {  "_id" : new ObjectId(id)}
-            let result = await database.deleteOne(filter) as any
-
-            if (result.acknowledged && result.deletedCount == 1) {
-                apiResponse = new APIResponse(200, "Book deleted successfully!", id)
-                return new ResponseHandler(200, apiResponse)
-            } else {
-                apiResponse = new APIResponse(500, "Error occurred while deleting the book!", id)
-                return new ResponseHandler(500, apiResponse)
-            }
-        } catch (err)
-        {   apiResponse = new APIResponse(500, "Internal Server Error! " + err, id)
-            return new ResponseHandler(500, apiResponse)
+        if (deletedBook) {
+            apiResponse = new APIResponse(200, "Books deleted successfully!", bookId);
+            res.status(200).json(apiResponse);
+        } else {
+            apiResponse = new APIResponse(500, "Error occurred while deleting the book!", bookId);
+            res.status(500).json(apiResponse);
         }
+    } catch (err)
+    {   apiResponse = new APIResponse(500, "Internal Server Error! " + err, bookId);
+        res.status(500).json(apiResponse);
     }
 }

@@ -1,0 +1,30 @@
+service: digital-library-backend
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+
+  environment:
+    MONGO_DB_URL: mongodb+srv://root:root@aws-lambda-node.nyipsqz.mongodb.net/library?retryWrites=true&w=majority&appName=aws-lambda-node
+
+plugins:
+  - serverless-offline
+
+functions:
+  app:
+    handler: src/app.handler
+    events:
+      - http:
+          path: books
+          method: post
+      - http:
+          path: books/{id}
+          method: put
+      - http:
+          path: books
+          method: get
+      - http:
+          path: books/{id}
+          method: delete
+
