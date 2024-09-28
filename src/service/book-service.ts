@@ -1,18 +1,18 @@
 import { Request, Response } from 'express';
-import {Book} from "../model/book";
+import {BookModel} from "../model/book-model";
 import {APIResponse} from "../resource/response/api-response";
-import {getBookRequest} from "../resource/request/book-request";
+import {getBook} from "../resource/request/book";
 import {Status} from "../enums/status";
 
 export const insertBook = async (req: Request, res: Response): Promise<void> => {
     let apiResponse: APIResponse;
 
     try {
-        let bookRequest = getBookRequest(req.body);
-        let book = await new Book(bookRequest).save();
+        let book = getBook(req.body);
+        let newBook = await new BookModel(book).save();
 
-        if (book) {
-            apiResponse = new APIResponse(201, "Book added successfully!", book._id)
+        if (newBook) {
+            apiResponse = new APIResponse(201, "Book added successfully!", newBook._id)
             res.status(201).json(apiResponse);
         } else {
             apiResponse = new APIResponse(500, "Error occurred while saving the book!", null)
@@ -29,14 +29,14 @@ export const  updateBook = async (req: Request, res: Response) => {
     let bookId = req.params.id;
 
     try {
-        let bookRequest = getBookRequest(req.body);
-        let status = await validateBook(bookId, bookRequest.version);
+        let book = getBook(req.body);
+        let status = await validateBook(bookId, book.version);
 
         if (status != Status.NO_ERRORS) {
             apiResponse = new APIResponse(422, status, bookId);
             res.status(422).json(apiResponse);
         } else {
-            let updatedBook = await Book.findByIdAndUpdate(bookId, bookRequest) as any;
+            let updatedBook = await BookModel.findByIdAndUpdate(bookId, book) as any;
 
             if (updatedBook) {
                 apiResponse = new APIResponse(200, "Book updated successfully!", bookId);
@@ -53,7 +53,7 @@ export const  updateBook = async (req: Request, res: Response) => {
 }
 
 let validateBook = async (id: string, version: number) => {
-    let book = await Book.findById(id) as any;
+    let book = await BookModel.findById(id) as any;
 
     if (!book)
         return Status.INVALID_ID
@@ -67,7 +67,7 @@ export const loadBooks = async (req: Request, res: Response): Promise<void> => {
     let apiResponse: APIResponse;
 
     try {
-        let books = await Book.find() as Array<any>;
+        let books = await BookModel.find() as Array<any>;
 
         if (books.length > 0) {
             apiResponse = new APIResponse(200, "Books fetched successfully!", books);
@@ -87,10 +87,10 @@ export const deleteBook = async (req: Request, res: Response): Promise<void> => 
     let bookId = req.params.id;
 
     try {
-        let deletedBook = await Book.findByIdAndDelete(bookId);
+        let deletedBook = await BookModel.findByIdAndDelete(bookId);
 
         if (deletedBook) {
-            apiResponse = new APIResponse(200, "Books deleted successfully!", bookId);
+            apiResponse = new APIResponse(200, "Book deleted successfully!", bookId);
             res.status(200).json(apiResponse);
         } else {
             apiResponse = new APIResponse(500, "Error occurred while deleting the book!", bookId);

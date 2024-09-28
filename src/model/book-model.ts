@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
-import { BookRequest } from '../resource/request/book-request';
+import { Book } from '../resource/request/book';
 
-let bookSchema = new Schema<BookRequest>({
+let bookSchema = new Schema<Book>({
     title: { type: String, required: true },
     description: { type: String, required: true },
     year: { type: Number, required: true },
@@ -13,4 +13,4 @@ let bookSchema = new Schema<BookRequest>({
     lastModifiedDate: { type: Number, required: true }
 });
 
-export const Book = mongoose.model<BookRequest>('Book', bookSchema);
+export const BookModel = mongoose.model<Book>('Book', bookSchema);

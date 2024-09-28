@@ -3,17 +3,16 @@ Node.js tutorial project from execute CRUD operations hosted in AWS Lambda.
 
 * ### Technologies
 
-  * Node JS 20.12.11
-  * TypeScript 5.4.5
-  * Mongo DB 6.6.1
-  * Lambda Build 1.0.6
-  * AWS Lambda 8.10.137
-  * ESBuild Register 3.5.0
+  * Node JS 22.7.3
+  * TypeScript 5.6.2
+  * Mongoose 7.8.2
+  * Express 4.21.0
+  * Serverless HTTP 3.2.0
   
 * ### Release Note
 
   * Release: 1.0.0
-  * Date: 2024/05/11
+  * Date: 2024/09/28
   * Module: Digital Library Backend
   * Changes
     * Implement the insert books data function.

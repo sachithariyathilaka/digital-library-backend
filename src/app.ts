@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import {deleteBook, insertBook, loadBooks, updateBook} from "./service/book-service";
 import serverlessHttp from "serverless-http";
 
-console.log(process.env)
 mongoose.connect(process.env.MONGO_DB_URL).catch(err => console.error('MongoDB connection error: ', err));
 
 const app: Application = express();
