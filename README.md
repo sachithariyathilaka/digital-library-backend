@@ -18,4 +18,10 @@ Node.js tutorial project from execute CRUD operations hosted in AWS Lambda.
     * Implement the insert books data function.
     * Implement the load books data function.
     * Implement the update books data function.
-    * Implement the delete books data function.
+    * Implement the delete books data function. <br><br>
+
+  * Release: 1.1.0
+  * Date: 2025/01/12
+  * Module: Digital Library Backend
+  * Changes
+    * Added controller layer `BookController` to connect service and app.
