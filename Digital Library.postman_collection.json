@@ -24,17 +24,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://bsizuhvvo5.execute-api.us-east-1.amazonaws.com/dev/books",
-							"protocol": "https",
+							"raw": "{{host}}/books",
 							"host": [
-								"bsizuhvvo5",
-								"execute-api",
-								"us-east-1",
-								"amazonaws",
-								"com"
+								"{{host}}"
 							],
 							"path": [
-								"dev",
 								"books"
 							],
 							"query": [
@@ -83,19 +77,13 @@
 							}
 						},
 						"url": {
-							"raw": "https://bsizuhvvo5.execute-api.us-east-1.amazonaws.com/dev/books/66f7ddb2d3c1c29ef67f393f",
-							"protocol": "https",
+							"raw": "{{host}}/books/{{book-id}}",
 							"host": [
-								"bsizuhvvo5",
-								"execute-api",
-								"us-east-1",
-								"amazonaws",
-								"com"
+								"{{host}}"
 							],
 							"path": [
-								"dev",
 								"books",
-								"66f7ddb2d3c1c29ef67f393f"
+								"{{book-id}}"
 							],
 							"query": [
 								{
@@ -129,19 +117,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://bsizuhvvo5.execute-api.us-east-1.amazonaws.com/dev/books/66f7ddb2d3c1c29ef67f393f",
-							"protocol": "https",
+							"raw": "{{host}}/books/{{book-id}}",
 							"host": [
-								"bsizuhvvo5",
-								"execute-api",
-								"us-east-1",
-								"amazonaws",
-								"com"
+								"{{host}}"
 							],
 							"path": [
-								"dev",
 								"books",
-								"66f7ddb2d3c1c29ef67f393f"
+								"{{book-id}}"
 							]
 						}
 					},
@@ -153,17 +135,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://bsizuhvvo5.execute-api.us-east-1.amazonaws.com/dev/books",
-							"protocol": "https",
+							"raw": "{{host}}/books",
 							"host": [
-								"bsizuhvvo5",
-								"execute-api",
-								"us-east-1",
-								"amazonaws",
-								"com"
+								"{{host}}"
 							],
 							"path": [
-								"dev",
 								"books"
 							]
 						}
